@@ -1,0 +1,80 @@
+name: ghost
+services:
+  db:
+    environment:
+      - MYSQL_DATABASE=ghostdb
+      - MYSQL_PASSWORD=ghostdbpass
+      - MYSQL_ROOT_PASSWORD=ghostdbpass
+      - MYSQL_USER=ghost
+    image: mariadb:latest
+    restart: always
+    volumes:
+      - type: bind
+        source: /YOUR/DB/DIRECTORY
+        target: /var/lib/mysql
+        bind:
+          create_host_path: true
+    ports: []
+    devices: []
+    cap_add: []
+    command: []
+    networks:
+      - default
+    privileged: false
+    container_name: ""
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 7915M
+  ghost:
+    depends_on:
+      db:
+        condition: service_started
+        required: true
+    environment:
+      - database__client=mysql
+      - database__connection__database=ghostdb
+      - database__connection__host=db
+      - database__connection__password=ghostdbpass
+      - database__connection__user=ghost
+      - url=http://YOUR_IP_ADDRESS:2368
+    image: ghost:latest
+    ports:
+      - mode: ingress
+        target: 2368
+        published: "2368"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: bind
+        source: /YOUR/CONTENT/DIRECTORY
+        target: /var/lib/ghost/content
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    command: []
+    networks:
+      - default
+    privileged: false
+    container_name: ""
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 7915M
+networks:
+  default:
+    name: ghost_default
+x-casaos:
+  hostname: ""
+  scheme: http
+  index: /
+  port_map: ""
+  author: self
+  category: self
+  icon: https://github.com/walkxcode/dashboard-icons/blob/main/png/ghost.png?raw=true
+  title:
+    custom: Ghost
+version: "3.8"
