@@ -1,0 +1,39 @@
+name: it-tools
+services:
+  it-tools:
+    container_name: it-tools
+    image: corentinth/it-tools:latest
+    ports:
+      - mode: ingress
+        target: 80
+        published: "8989"
+        protocol: tcp
+    restart: unless-stopped
+    volumes: []
+    devices: []
+    cap_add: []
+    command: []
+    environment: []
+    networks:
+      - default
+    privileged: false
+    hostname: it-tools
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 7915M
+networks:
+  default:
+    name: it-tools_default
+x-casaos:
+  hostname: ""
+  scheme: http
+  index: /
+  port_map: ""
+  author: self
+  category: self
+  icon: https://pbs.twimg.com/profile_images/1518273966837796872/rda9RXuj_400x400.jpg
+  title:
+    custom: IT Tools
+version: "3.8"

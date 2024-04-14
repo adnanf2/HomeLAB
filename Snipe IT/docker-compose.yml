@@ -1,0 +1,33 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:latest
+    container_name: snipeit-inv
+    restart: always
+    volumes:
+      - /YOUR/DB/DIRECTORY:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=!qaz@wsx
+      - MYSQL_USER=snipeit
+      - MYSQL_PASSWORD=!qaz@wsx
+      - MYSQL_DATABASE=snipeit_db
+  snipeit:
+    image: linuxserver/snipe-it:latest
+    container_name: snipe-it
+    restart: always
+    depends_on:
+      - mysql
+    volumes:
+      - /YOUR/CONFIG/DIRECTORY:/config
+    environment:
+      - APP_URL=http://YOUR_IP_ADDRESS:8666
+      - MYSQL_PORT_3306_TCP_ADDR=mysql
+      - MYSQL_PORT_3306_TCP_PORT=3306
+      - MYSQL_DATABASE=snipeit_db
+      - MYSQL_USER=snipeit
+      - MYSQL_PASSWORD=!qaz@wsx
+      - PGID=1000
+      - PUID=1000
+    ports:
+      - 8666:80
+networks: {}
