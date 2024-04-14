@@ -1,0 +1,81 @@
+name: wordpress
+services:
+  app:
+    depends_on:
+      db:
+        condition: service_started
+        required: true
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_NAME=wordpress
+      - WORDPRESS_DB_PASSWORD=dockge
+      - WORDPRESS_DB_USER=dockge
+    image: wordpress:latest
+    ports:
+      - mode: ingress
+        target: 80
+        published: "8181"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /YOUR/DATA/DIRECTORY
+        target: /var/www/html
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    command: []
+    networks:
+      - wordpress-network
+    privileged: false
+    restart: unless-stopped
+    container_name: ""
+    hostname: ""
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 7915M
+  db:
+    environment:
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_PASSWORD=dockge
+      - MYSQL_ROOT_PASSWORD=dockge
+      - MYSQL_USER=dockge
+    image: mysql:5.7
+    volumes:
+      - type: bind
+        source: /YOUR/DB/DIRECTORY
+        target: /var/lib/mysql
+        bind:
+          create_host_path: true
+    ports: []
+    devices: []
+    cap_add: []
+    command: []
+    networks:
+      - wordpress-network
+    privileged: false
+    restart: unless-stopped
+    container_name: ""
+    hostname: ""
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 7915M
+networks:
+  wordpress-network:
+    name: wordpress_wordpress-network
+    driver: bridge
+x-casaos:
+  hostname: ""
+  scheme: http
+  index: /
+  port_map: ""
+  author: self
+  category: self
+  icon: https://pngimg.com/uploads/wordpress/wordpress_PNG4.png
+  title:
+    custom: WordPress
+version: "3.8"

@@ -1,0 +1,51 @@
+name: uptime-kuma
+services:
+  uptime-kuma:
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:1
+    ports:
+      - mode: ingress
+        target: 3001
+        published: "3001"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: bind
+        source: /YOUR/DATA/DIRECTORY
+        target: /app/data
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        bind:
+          create_host_path: true
+    devices: []
+    cap_add: []
+    command: []
+    environment: []
+    networks:
+      - default
+    privileged: false
+    hostname: uptime-kuma
+    cpu_shares: 90
+    deploy:
+      resources:
+        limits:
+          memory: 7915M
+networks:
+  default:
+    name: uptime-kuma_default
+  gotify_default:
+    external: true
+x-casaos:
+  hostname: ""
+  scheme: http
+  index: /
+  port_map: ""
+  author: self
+  category: self
+  icon: https://libs.websoft9.com/Websoft9/logo/product/uptimekuma-websoft9.png
+  title:
+    custom: Uptime Kuma
+version: "3.8"
